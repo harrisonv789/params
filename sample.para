@@ -1,0 +1,16 @@
+# This is a sample parameter file.
+# Please use this file as an example when constructing your own parameter file.
+
+# All parameters can be constructed using the following format:
+# key  |  name  |  value  |  flag  |  options
+
+# -----------
+# Below are some examples
+
+fname | First Name | Harrison |      |
+age   | Age        | 22       |      |
+male  | Is Male    | True     | flag |
+color | Fav Color  | Orange   |      | Blue, Green, Red, Yellow
+
+# -----------
+# All parameters here are saved by the file system and can be edited
