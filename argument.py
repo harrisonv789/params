@@ -1,6 +1,8 @@
 # This is a class that stores information about a particular argument
 class Arg:
 
+    ############################################################
+
     # Constructor for initialising the constructor
     # Takes in a key, name, a default value and a list of possible values (optional)
     def __init__ (self, key, name, default, flag = False, values=[]):
@@ -12,6 +14,9 @@ class Arg:
         self.options = len(values) > 0 and values[0] != ""
         self.value = self.default
 
+
+
+    ############################################################
 
     # Parses a value for the parameter and returns the value
     def parse (self, value):
@@ -41,16 +46,25 @@ class Arg:
         # Returns the value
         return self.value
 
+
+
+    ############################################################
     
     # Gets the value from the argument call
     def __call__ (self, *args, **kwds):
         return self.value
 
 
+
+    ############################################################
+
     # Converts the argument to a string
     def __str__ (self):
         return "Key: %s   Name: %s   Default: %s   Flag: %s    Options: %s   Value: %s" \
             % (self.key, self.name, self.default, self.flag, self.values, self.value)
+
+
+    ############################################################
 
     # Converts the argument to file
     @property
@@ -67,6 +81,9 @@ class Arg:
         
         return [str(self.key), str(self.name), str(self.value), flag, options]
 
+
+
+    ############################################################
 
     # Reads a value and stores it of the correct type
     @staticmethod
@@ -90,3 +107,7 @@ class Arg:
 
         # For strings
         return value
+
+
+    
+    ############################################################

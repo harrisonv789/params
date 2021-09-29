@@ -30,6 +30,7 @@ class Color:
     PARAM       = GREEN_B       # The color used for parameters
     DEFAULT     = MAGENTA_B     # The color used for a default value
     INPUT       = CYAN_B        # The color used for a inpiut value
+    OPTIONS     = YELLOW_B      # The colour used for the options
     WARNING     = '\033[93m'    # Yellow Warning message
     ERROR       = '\033[91m'    # Red Error message
     BOLD        = '\033[1m'     # Standard, but just bold

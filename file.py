@@ -1,5 +1,6 @@
 import os
 from .argument import Arg
+from .color import Color
 
 # Class that reads a file and creates a list of parameters based on the file
 class ParamFile:
@@ -51,8 +52,17 @@ class ParamFile:
                 if f == file:
                     return subdir + "/" + f
 
-        # If no files found, return None and raise an error
-        raise FileNotFoundError("No parameter file '%s' exists in root directories." % file)
+        # If no files found, ask the user if they want to create a file
+        c_in = input("%sWARNING: Unable to find parameter file. Would you like to create one? y/n:%s " % (Color.WARNING, Color.END)).lower()[0]
+
+        # If needing to create a new file
+        if c_in == "y":
+            self.create_file(file)
+            return file
+
+        # Otherwise cancel the script
+        else:
+            exit()
 
 
 
@@ -116,10 +126,14 @@ class ParamFile:
     ############################################################
 
     # Writes to the file with the current arguments
-    def write_file (self):
+    def write_file (self, file = None):
+
+        # Check for empty file
+        if file == None:
+            file = self.path
 
         # Opens up the current data and create an array of the lines
-        filedata = open(self.path, 'r').readlines()
+        filedata = open(file, 'r').readlines()
 
         # Create the list of data
         data = {}
@@ -144,13 +158,69 @@ class ParamFile:
             # Remove the final |
             new_line = new_line[:-2] + "\n"
 
+            # Check if this line is missing (for new files)
+            if line >= len(filedata):
+                filedata.append(new_line)
+
             # Update the line
-            filedata[line] = new_line
+            else:
+                filedata[line] = new_line
 
         # Write the lines to the ouput file
-        out = open(self.path, 'w')
+        out = open(file, 'w')
         out.writelines(filedata)
         out.close()
+
+
+
+    ############################################################
+
+    # Creates a new parameter file with a list of empty parameters
+    def create_file (self, file):
+
+        # Make sure it is a para file
+        if "." not in file:
+            file = file + self.FILE_ENDING
+
+        # Reset the arguments
+        self.args = {}
+        self.lines = {}
+            
+        # Count the lines
+        line = 1
+
+        # Ask the user for a new parameter
+        while True:
+            arg_key = input("\n%sPlease enter a parameter name (%s-q%s to stop): %s" % (Color.END, Color.INPUT, Color.END, Color.INPUT)).lower()
+
+            # Check if quitting the argument
+            if arg_key == "-q":
+                break
+
+            # Get the default value
+            arg_val = input("\t%sEnter value for %s%s%s: %s" % \
+                    (Color.END, Color.PARAM, arg_key, Color.END, Color.INPUT))
+
+            # Determine if it is a flag
+            arg_flag = str(arg_val.lower()) in ("true", "false")
+
+            # Create the argument
+            self.args[arg_key] = Arg(arg_key, arg_key, arg_val, arg_flag, [])
+            self.lines[line] = arg_key
+
+            # Increment the line
+            line += 1
+
+        # Create an empty file
+        with open(file, "w") as f:
+            f.write("# New parameter file with some default parameters\n")
+
+        # Write to a new file
+        self.write_file(file)
+
+        # Print the parameter file update
+        print("\n%sCreated a new parameter file %s%s%s. Please edit all parameters before continuing." % (Color.END, Color.PARAM, file, Color.END))
+        exit()
 
 
 
@@ -180,3 +250,7 @@ class ParamFile:
         for arg in self.args.values():
             output += str(arg) + "\n"
         return output
+
+
+
+    ############################################################
