@@ -68,8 +68,14 @@ To change the parameter file being referenced by the system, use the **-para** f
 python3 [code].py -para [PARA FILE]
 ```
 
-Additional changes to parameters can also be appended to the system arguments, which will override the parameters for this run instance. These values will not be saved to the parameter files:
+Additional changes to parameters can also be appended to the system arguments, which will override the parameters for this run instance. These values will NOT be saved to the parameter file by default, but will be returned from the **get** function.
 
 ```
 python3 [code].py -key_0 val_0 -key_1 val_1 -key_2 val_2 ...
+```
+
+To save the additional parameters from the system arguments to the parameter file, use the **-save** flag:
+
+```
+python3 [code].py -key_0 val_0 -key_1 val_1 ... -save
 ```

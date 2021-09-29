@@ -40,9 +40,15 @@ class Params:
         if "edit" in self.commands.keys():
             self.__edit(self.commands["edit"])
 
-        # Save the file if any changes have been made (and make sure it is being used)
-        if "save" not in self.commands.keys() or self.commands["save"] == True:
-            self.reader.write_file()
+        # If saving the file to the system, save all the changes
+        if "save" in self.commands and self.commands["save"] == True:
+            for com in self.commands.keys():
+                # If the command exists, update the value to the one in the commands
+                if self.reader.exists(com):
+                    self.reader.args[com].value = Arg.convert(self.commands[com])
+
+        # Update the write file
+        self.reader.write_file()
 
 
 
