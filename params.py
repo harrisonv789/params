@@ -136,6 +136,19 @@ class Params:
     ############################################################
 
     '''
+    Returns a list of all parameter keywords that can be usedd
+    @returns                The list of key words
+    '''
+    @property
+    def list (self) -> list:
+        # Returns the list of keys
+        return list(self.reader.args.keys())
+
+
+    
+    ############################################################
+
+    '''
     Parses a list of commands from the system arguments
     @param  args: list      The list of all arguments to parse
     @returns                A dictionary of the commands

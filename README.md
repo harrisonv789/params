@@ -64,6 +64,12 @@ If the params are requested from a class, the parameters can be appended to the 
 self.__dict__.update(params.get_all())
 ```
 
+To get a list of all valid parameters from the file, use the **list** property.
+
+```
+keys = params.list
+```
+
 ---
 
 ### Command Line :computer:
