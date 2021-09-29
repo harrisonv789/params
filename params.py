@@ -28,7 +28,7 @@ class Params:
             self.edit(self.commands["edit"])
 
         # Save the file if any changes have been made
-        self.reader.save_file()
+        self.reader.write_file()
 
 
 

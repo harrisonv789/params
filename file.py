@@ -1,12 +1,25 @@
 import os
 from .argument import Arg
 
-# Reads a file and creates a list of parameters based on the file
+# Class that reads a file and creates a list of parameters based on the file
 class ParamFile:
+
+
+    ############################################################
+    # DEFINED CONSTANTS
+
+    # Ignored characters for the param file
+    # These are the starting character for a comment line
+    IGNORED_CHARS = ('#', '/')
+    FILE_ENDING = ".para"
+
+
+
+    ############################################################
 
     # Constructor for reading the file
     # Takes in a para file
-    def __init__ (self, file = "input.para"):
+    def __init__ (self, file = "input" + FILE_ENDING):
 
         # Get the file from the directory
         self.path = self.find_file(file)
@@ -15,19 +28,21 @@ class ParamFile:
         self.args = {}
         self.lines = {}
         
-        # Load the file
-        self.load_file()
+        # Reads the file and parses it into the arguments
+        self.read_file(self.path)
 
 
+
+    ############################################################
 
     # Finds a file if it does not exist in the directory
-    # Reurns a 'str' if the file is found with the directory to he file
+    # Returns a 'str' if the file is found with the directory to he file
     # Raises an error if no file found.
     def find_file (self, file) -> str:
 
         # Make sure there is a .para extension if no extension
         if "." not in file:
-            file = file + ".para"
+            file = file + self.FILE_ENDING
 
         # Walk through the files in the directory looking for the filename
         for subdir, dirs, files in os.walk("."):
@@ -41,43 +56,69 @@ class ParamFile:
 
 
 
-    # Loads the file and creates the arguments
-    def load_file (self):
-        with open(self.path) as file:
-            for idx, line in enumerate(file.readlines()):
-                line = line.strip()
+    ############################################################
 
-                # Ignore empty lines and comments
-                if len(line) < 2:
-                    continue
-                if line[0] == "#":
-                    continue
+    # Reads the file and creates the arguments
+    # Takes in a valid path to the file
+    # Returns the argyment dictionary created
+    def read_file (self, path) -> dict:
 
-                # Read the para
-                info = line.split("|")
+        # Make sure the path exists, otherwise raise an error
+        if not os.path.exists(path):
+            raise FileNotFoundError("File path '%s' does not exist." % path)
 
-                # Check for invalid lines
-                if len(info) != 5:
-                    continue
+        # Opens the file from the current path
+        with open(path) as file:
 
-                # Remove the spaces in the information
-                info = [i.strip() for i in info]
+            # Attempt to read the file
+            try:
+                # Read each of the lines and strip the spaces from the lines
+                for idx, line in enumerate(file.readlines()):
+                    line = line.strip()
 
-                # Create the options list for info [4]
-                opts = [o.strip() for o in info[4].split(",")]
+                    # Ignore empty lines and comment lines
+                    if len(line) < 2:
+                        continue
+                    if line[0] in self.IGNORED_CHARS:
+                        continue
 
-                # Create the argument
-                arg = Arg(info[0], info[1], info[2], info[3], opts)
+                    # Read the para
+                    info = line.split("|")
 
-                # Add the argument
-                self.args[arg.key] = arg
+                    # Check for invalid lines
+                    if len(info) != 5:
+                        continue
 
-                # Store the line
-                self.lines[idx] = arg.key
+                    # Remove the spaces in the information
+                    info = [i.strip() for i in info]
 
+                    # Create the options list for info [4]
+                    opts = [o.strip() for o in info[4].split(",")]
+
+                    # Create the argument
+                    arg = Arg(info[0], info[1], info[2], info[3], opts)
+
+                    # Add the argument
+                    self.args[arg.key] = arg
+
+                    # Store the line
+                    self.lines[idx] = arg.key
+            
+            # Raise an exception if an invalid file
+            except:
+                raise Exception("Failed to Parse parameter file.")
+
+        # Returns the argument dictionary
+        return self.args
+
+
+
+    ############################################################
 
     # Writes to the file with the current arguments
-    def save_file (self):
+    def write_file (self):
+
+        # Opens up the current data and create an array of the lines
         filedata = open(self.path, 'r').readlines()
 
         # Create the list of data
@@ -106,16 +147,22 @@ class ParamFile:
             # Update the line
             filedata[line] = new_line
 
-        # Write the lines
+        # Write the lines to the ouput file
         out = open(self.path, 'w')
         out.writelines(filedata)
         out.close()
 
 
+
+    ############################################################
+
     # Checks if argument exists
-    def exists (self, key):
+    def exists (self, key) -> bool:
         return key in self.args.keys()
 
+
+
+    ############################################################
 
     # Gets the value of a key
     def arg (self, key):
@@ -123,6 +170,9 @@ class ParamFile:
             return self.args[key]
         return None
 
+
+
+    ############################################################
 
     # Prints all the arguments
     def __str__ (self):
