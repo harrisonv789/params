@@ -26,7 +26,7 @@ class Color:
     
     # The following are standards to follow
     END         = '\033[0m'     # Resets back to the standard
-    HEADER      = '\033[0m'     # Header text
+    HEADER      = '\033[37;1m'     # Header text
     PARAM       = GREEN_B       # The color used for parameters
     DEFAULT     = MAGENTA_B     # The color used for a default value
     INPUT       = CYAN_B        # The color used for a inpiut value

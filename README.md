@@ -89,7 +89,13 @@ keys = params.list
 
 ### Command Line :computer:
 
-Additional commands are able to be entered from the command line. Using the **-edit** flag will open the terminal UI for editing parameter file values. To run this, run the following bash script:
+Additional commands are able to be entered from the command line. The **-list** flag will display the list of all values from the parameter file in an ordered list.
+
+```
+python3 [code].py -list
+```
+
+Using the **-edit** flag will open the terminal UI for editing parameter file values. To run this, run the following bash script:
 
 ```
 python3 [code].py -edit

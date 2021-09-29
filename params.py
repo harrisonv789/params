@@ -1,8 +1,12 @@
+#!/usr/bin/python3
+
 # Import relevant modules
 import sys
 from .color import Color
 from .argument import Arg
 from .file import ParamFile
+
+
 
 # Class that defines getting the parameters
 # This class handles all parameter data and can be used to query data
@@ -35,6 +39,10 @@ class Params:
 
         # Read the parameters file
         self.reader = ParamFile(self.paramfile)
+
+        # If listing the file
+        if "list" in self.commands.keys():
+            self.__list()
 
         # If editing the file, edit the commands
         if "edit" in self.commands.keys():
@@ -196,7 +204,40 @@ class Params:
         
         # Returns the commands
         return commands
-            
+
+
+
+    ############################################################
+
+    '''
+    Displays the full list of parameters on the Terminal UI
+    '''
+    def __list (self):
+
+        # Print out a name of the script
+        print("------------------------------------------------------------")
+        print("%sDISPLAYING %s PARAMETER FILE%s" % (Color.HEADER, self.paramfile, Color.END))
+        print("------------------------------------------------------------")
+
+        # Loop through each argument
+        for idx, arg in enumerate(self.reader.args.values()):
+
+            # Get the options
+            if len(arg.values) > 0 and arg.values[0] != "":
+                options = "\n\tOptions = %s%s%s" % (Color.OPTIONS, arg.values, Color.END)
+            else:
+                options = ""
+
+            # Print values
+            print("\n%sParameter %d: %s%s%s (%s%s%s)%s\n\tDefault = %s%s%s" % \
+                (Color.END, idx, Color.PARAM, arg.name, Color.END,
+                Color.PARAM, arg.key, Color.END, options,
+                Color.DEFAULT, str(arg.value), Color.END))
+        
+         # Make sure to reset the colours
+        print(Color.RESET)
+        print("------------------------------------------------------------\n")
+
 
 
     ############################################################
@@ -209,7 +250,7 @@ class Params:
 
         # Print out a name of the script
         print("------------------------------------------------------------")
-        print("%sEDITING %s%s PARAMETER FILE" % (Color.HEADER, self.paramfile, Color.END))
+        print("%sEDITING %s PARAMETER FILE%s" % (Color.HEADER, self.paramfile, Color.END))
         print("------------------------------------------------------------")
 
         # Print out the information about skipping
