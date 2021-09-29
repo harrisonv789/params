@@ -28,6 +28,8 @@ If no parameter file is found, the module will prompt the user to create a new p
 
 ### Getting Values :package:
 
+##### Specific Parameters
+
 To get each parameter, it must be called by the parameter key. This will return an object from the parameters. Current possible object types include **int**, **float**, **bool** and **str**.
 
 ```
@@ -39,6 +41,9 @@ If it is not known whether a parameter has a value in the file yet, a default va
 ```
 value = params.get("key", "default")
 ```
+</br>
+
+##### Arrays
 
 Some parameters may have multiple values in the value data. These values must be separated by commas (,) in the parameter file. If this is the case, the values can be parsed by the module using the following function.
 
@@ -52,7 +57,17 @@ This will return a list of all the objects from the value parsed in their correc
 value = params.get_array("key", strings = True)
 ```
 
+For data that is not being split by a comma, a different delimiter can be used instead. This parameter can be passed into the function:
+
+```
+value = params.get_array("key", delim = ',')
+```
+
 A dictionary of all parameters by their key, that returns the value of the parameters, can be fetched using the following function:
+
+</br>
+
+##### All Values
 
 ```
 all_values = params.get_all()

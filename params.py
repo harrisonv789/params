@@ -94,10 +94,11 @@ class Params:
     Returns a list structure from the values of the data. This assumes data is seperated by ,
     @param  key: str        The key of the parameter to look for
     @param  default         The default value if no key has been found
-    @param  type            The type to hard cast the values to. Only use if known.
+    @param  srings          A flag for casting all values as a string
+    @param  delim           A character to split the list by from the values (, by default)
     @returns                The list of values
     '''
-    def get_array (self, key: str, default = None, strings = False) -> list:
+    def get_array (self, key: str, default = None, strings = False, delim = ',') -> list:
 
         # Get the value
         value = self.get(key, default)
@@ -106,10 +107,10 @@ class Params:
         if not strings:
 
             # Returns the new list of values stripped of white space
-            return [Arg.convert(x.strip()) for x in str(value).split(",")]
+            return [Arg.convert(x.strip()) for x in str(value).split(delim)]
 
         # Otherwise return the casted type
-        return [str(x.strip()) for x in str(value).split(",")]
+        return [str(x.strip()) for x in str(value).split(delim)]
 
 
 
