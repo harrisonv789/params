@@ -94,15 +94,22 @@ class Params:
     Returns a list structure from the values of the data. This assumes data is seperated by ,
     @param  key: str        The key of the parameter to look for
     @param  default         The default value if no key has been found
+    @param  type            The type to hard cast the values to. Only use if known.
     @returns                The list of values
     '''
-    def get_array (self, key: str, default = None) -> list:
+    def get_array (self, key: str, default = None, strings = False) -> list:
 
         # Get the value
         value = self.get(key, default)
 
-        # Returns the new list of values stripped of white space
-        return [Arg.convert(x.strip()) for x in str(value).split(",")]
+        # Check if the type is not a string
+        if not strings:
+
+            # Returns the new list of values stripped of white space
+            return [Arg.convert(x.strip()) for x in str(value).split(",")]
+
+        # Otherwise return the casted type
+        return [str(x.strip()) for x in str(value).split(",")]
 
 
 

@@ -46,7 +46,11 @@ Some parameters may have multiple values in the value data. These values must be
 value = params.get_array("key")
 ```
 
-This will return a list of all the objects from the value parsed in their correct format.
+This will return a list of all the objects from the value parsed in their correct format. If wanting a list of data that is converted as a string and no other type, use:
+
+```
+value = params.get_array("key", strings = True)
+```
 
 A dictionary of all parameters by their key, that returns the value of the parameters, can be fetched using the following function:
 
