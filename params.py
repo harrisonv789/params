@@ -11,8 +11,10 @@ class Params:
 
     ############################################################
 
-    # Initialiser takes in a parameter on whether to use defaults at all
-    # Pass in sys.argv into the arguments
+    '''
+    Initialises the class
+    @param  kwargs          A list of additional arguments to parse
+    '''
     def __init__(self, **kwargs):
 
         # Load the arguments from the system arguments
@@ -22,7 +24,7 @@ class Params:
         self.name = args[0] if len(args) > 0 else "script.py"
 
         # Load the commands
-        self.commands = self.parse(args[1:]) if len(args) > 1 else {}
+        self.commands = self.__parse(args[1:]) if len(args) > 1 else {}
 
         # Update the commands with the kwargs
         for k in kwargs.keys():
@@ -36,7 +38,7 @@ class Params:
 
         # If editing the file, edit the commands
         if "edit" in self.commands.keys():
-            self.edit(self.commands["edit"])
+            self.__edit(self.commands["edit"])
 
         # Save the file if any changes have been made (and make sure it is being used)
         if "save" not in self.commands.keys() or self.commands["save"] == True:
@@ -46,8 +48,13 @@ class Params:
 
     ############################################################
 
-    # Gets a particular argument
-    def get (self, key: str):
+    '''
+    Returns the value of a parameter from the system.
+    @param  key: str        The key of the parameter to look for
+    @param  default         The default value if no key has been found
+    @returns                The value from the parameter (as an object)
+    '''
+    def get (self, key: str, default = None) -> object:
 
         # Error check
         if key == "":
@@ -66,16 +73,43 @@ class Params:
             if self.reader.exists(key):
                 arg = self.reader.arg(key)()
 
-        # Return the argument
+        # Returns the default value if missing
+        if arg == None and default != None:
+            return default
+
+        # Return the argument otherwise
         return "" if arg == None else arg
+
+
+
+    ############################################################
+
+    '''
+    Returns a dictionary of all of the values, as passed with a key
+    @returns                The dictionary of values
+    '''
+    def get_all (self) -> dict:
+
+        # Store a dictionary of values
+        arg_vals = {}
+
+        # Loop through all of the keys and set the value
+        for key in self.reader.args.keys():
+            arg_vals[key] = self.reader.arg(key)()
+
+        # Returns the new list
+        return arg_vals
 
 
     
     ############################################################
 
-    # Parses the arguments from the command line
-    # Turns them into a series of commands for the arguments
-    def parse (self, args):
+    '''
+    Parses a list of commands from the system arguments
+    @param  args: list      The list of all arguments to parse
+    @returns                A dictionary of the commands
+    '''
+    def __parse (self, args: list) -> dict:
         commands = {}
         com = None
 
@@ -87,7 +121,7 @@ class Params:
                 if str(arg)[0] == "-":
                     com = str(arg)[1:].lower()
                 else:
-                    raise ValueError("Incorrect Series of Parameters.")
+                    continue
             else:
                 if str(arg)[0] == "-":
                     # Attempt to parse a negative number
@@ -115,14 +149,19 @@ class Params:
 
     ############################################################
 
-    # Asks the user for new values to edit on the files
-    # It can take in a key if editing only one key, as opposed to all
-    def edit (self, key = None):
+    '''
+    Displays an interface to edit a parameter file.
+    @param  key: str        The key of the parameter to edit. If None, then it will edit all
+    '''
+    def __edit (self, key = None):
 
         # Print out a name of the script
         print("------------------------------------------------------------")
         print("%sEDITING %s%s PARAMETER FILE" % (Color.HEADER, self.paramfile, Color.END))
         print("------------------------------------------------------------")
+
+        # Print out the information about skipping
+        print("\nHit 'enter' to use default, %s-q%s to stop editing." % (Color.INPUT, Color.END))
 
         # Loop through each value
         for arg in self.reader.args.values():
