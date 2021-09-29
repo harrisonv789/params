@@ -91,6 +91,24 @@ class Params:
     ############################################################
 
     '''
+    Returns a list structure from the values of the data. This assumes data is seperated by ,
+    @param  key: str        The key of the parameter to look for
+    @param  default         The default value if no key has been found
+    @returns                The list of values
+    '''
+    def get_array (self, key: str, default = None) -> list:
+
+        # Get the value
+        value = self.get(key, default)
+
+        # Returns the new list of values stripped of white space
+        return [Arg.convert(x.strip()) for x in str(value).split(",")]
+
+
+
+    ############################################################
+
+    '''
     Returns a dictionary of all of the values, as passed with a key
     @returns                The dictionary of values
     '''
@@ -136,10 +154,17 @@ class Params:
                         commands[com] = arg
                         com = None
                     
-                    # Assume it is a flag
+                    # If failed to turn to number
                     except:
-                        commands[com] = True
-                        com = str(arg)[1:].lower()
+                        # Check for array of values
+                        if "," in str(arg):
+                            commands[com] = arg
+                            com = None
+
+                        # Assume it is a flag
+                        else:
+                            commands[com] = True
+                            com = str(arg)[1:].lower()
                 else:
                     commands[com] = arg
                     com = None

@@ -40,6 +40,14 @@ If it is not known whether a parameter has a value in the file yet, a default va
 value = params.get("key", "default")
 ```
 
+Some parameters may have multiple values in the value data. These values must be separated by commas (,) in the parameter file. If this is the case, the values can be parsed by the module using the following function.
+
+```
+value = params.get_array("key")
+```
+
+This will return a list of all the objects from the value parsed in their correct format.
+
 A dictionary of all parameters by their key, that returns the value of the parameters, can be fetched using the following function:
 
 ```
