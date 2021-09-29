@@ -2,24 +2,48 @@ import os
 from .argument import Arg
 
 # Reads a file and creates a list of parameters based on the file
-class ParamReader:
+class ParamFile:
 
     # Constructor for reading the file
+    # Takes in a para file
     def __init__ (self, file = "input.para"):
-        # Load the file
-        if os.path.isfile(file):
-            self.file = file
-            self.args = {}
-            self.lines = {}
-            self.load_file()
 
-        # Otherwise raise an error
-        else:
-            raise FileNotFoundError("No parameter file '%s' exists." % file)
+        # Get the file from the directory
+        self.path = self.find_file(file)
+
+        # Initialise the arguments and the lines dictionary
+        self.args = {}
+        self.lines = {}
+        
+        # Load the file
+        self.load_file()
+
+
+
+    # Finds a file if it does not exist in the directory
+    # Reurns a 'str' if the file is found with the directory to he file
+    # Raises an error if no file found.
+    def find_file (self, file) -> str:
+
+        # Make sure there is a .para extension if no extension
+        if "." not in file:
+            file = file + ".para"
+
+        # Walk through the files in the directory looking for the filename
+        for subdir, dirs, files in os.walk("."):
+            for f in files:
+                # If the file exists, return the path
+                if f == file:
+                    return subdir + "/" + f
+
+        # If no files found, return None and raise an error
+        raise FileNotFoundError("No parameter file '%s' exists in root directories." % file)
+
+
 
     # Loads the file and creates the arguments
     def load_file (self):
-        with open(self.file) as file:
+        with open(self.path) as file:
             for idx, line in enumerate(file.readlines()):
                 line = line.strip()
 
@@ -54,7 +78,7 @@ class ParamReader:
 
     # Writes to the file with the current arguments
     def save_file (self):
-        filedata = open(self.file, 'r').readlines()
+        filedata = open(self.path, 'r').readlines()
 
         # Create the list of data
         data = {}
@@ -83,7 +107,7 @@ class ParamReader:
             filedata[line] = new_line
 
         # Write the lines
-        out = open(self.file, 'w')
+        out = open(self.path, 'w')
         out.writelines(filedata)
         out.close()
 

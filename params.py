@@ -1,7 +1,7 @@
 # Import relevant modules
 from .color import Color
 from .argument import Arg
-from .reader import ParamReader
+from .file import ParamFile
 
 # Class that defines getting the parameters
 # This class handles all parameter data and can be used to query data
@@ -21,7 +21,7 @@ class Params:
         self.file = self.commands["para"] if "para" in self.commands.keys() else self.name.replace(".py", ".para")
 
         # Read the parameters file
-        self.reader = ParamReader(self.file)
+        self.reader = ParamFile(self.file)
 
         # If editing the file
         if "edit" in self.commands.keys():
