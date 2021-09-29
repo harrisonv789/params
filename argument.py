@@ -69,7 +69,7 @@ class Arg:
     # Converts the argument to file
     @property
     def information (self):
-        flag = "flag" if self.flag else ""
+        flag = "flag" if self.flag or type(self.value) is bool else ""
 
         # Format the options
         options = ""
