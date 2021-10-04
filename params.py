@@ -102,7 +102,7 @@ class Params:
     Returns a list structure from the values of the data. This assumes data is seperated by ,
     @param  key: str        The key of the parameter to look for
     @param  default         The default value if no key has been found
-    @param  srings          A flag for casting all values as a string
+    @param  strings         A flag for casting all values as a string
     @param  delim           A character to split the list by from the values (, by default)
     @returns                The list of values
     '''
@@ -229,7 +229,7 @@ class Params:
                 options = ""
 
             # Print values
-            print("\n%sParameter %d: %s%s%s (%s%s%s)%s\n\tDefault = %s%s%s" % \
+            print("\n%sParameter %d: %s%s%s (%s%s%s)%s\n\tValue = %s%s%s" % \
                 (Color.END, idx, Color.PARAM, arg.name, Color.END,
                 Color.PARAM, arg.key, Color.END, options,
                 Color.DEFAULT, str(arg.value), Color.END))
